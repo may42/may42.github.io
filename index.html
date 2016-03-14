@@ -2,19 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>matrix calculator</title>
-    <meta name="description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы найдете детальное пошаговое решение матричной задачи, которое поможет понять, как найти произведение матриц.">
-    <meta name="keywords" content="умножение матриц онлайн, найти произведение матриц, произведение матриц онлайн, вычислить произведение матриц, вычисление, матрица, произведение, умножение, калькулятор, онлайн">
-    <meta property="og:type" content="website">
-    <meta property="og:description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы найдете детальное пошаговое решение матричной задачи, которое поможет понять, как найти произведение матриц.">
-    <link rel="stylesheet" href="reset.css" type="text/css">
+<title>matrix calculator</title>
+<meta name="description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы найдете детальное пошаговое решение матричной задачи, которое поможет понять, как найти произведение матриц.">
+<meta name="keywords" content="умножение матриц онлайн, найти произведение матриц, произведение матриц онлайн, вычислить произведение матриц, вычисление, матрица, произведение, умножение, калькулятор, онлайн">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы найдете детальное пошаговое решение матричной задачи, которое поможет понять, как найти произведение матриц.">
+<link rel="stylesheet" href="reset.css" type="text/css">
+<link rel="stylesheet" href="styles.css" type="text/css">
 </head>
 <body>
-<div>
+<div class="content-container clearfix">
     <form>
-        <input type="text" placeholder="a1">
-        <input type="text" placeholder="a2">
+
+    <div class="sidebar">
+        <button id="multiply">Перемножить матрицы</button>
+        <button id="clear">Очистить матрицы</button> <br>
+        <button id="swap">Поменять матрицы местами</button> <br>
+        <label><input type="radio" name="whichMatrix" value="A">Матрица А</label>
+        <label><input type="radio" name="whichMatrix" value="B">Матрица B</label> <br>
+        <button id="addRow">Добавить</button>
+        <button id="removeRow">Удалить</button>
+        <span>строку</span> <br>
+        <button id="addCol">Добавить</button>
+        <button id="removeCol">Удалить</button>
+        <span>столбец</span> <br>
+
+        <div class="errorMessage">
+            Такие матрицы нельзя перемножить, так как количество столбцов матрицы А не равно количеству строк матрицы В.
+        </div>
+    </div>
+    <div class="content">
+        <table class="matrix result-matrix"><tbody>
+        <tr>
+            <td><input type="text" placeholder="a11"></td>
+            <td><input type="text" placeholder="a12"></td>
+            <td><input type="text" placeholder="a13"></td>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="a21"></td>
+            <td><input type="text" placeholder="a22"></td>
+            <td><input type="text" placeholder="a23"></td>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="a31"></td>
+            <td><input type="text" placeholder="a32"></td>
+            <td><input type="text" placeholder="a33"></td>
+        </tr>
+        </tbody></table>
+        <table class="matrix matrix-a"><tbody>
+        <tr>
+            <td><input type="text" placeholder="a11"></td>
+            <td><input type="text" placeholder="a12"></td>
+            <td><input type="text" placeholder="a13"></td>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="a21"></td>
+            <td><input type="text" placeholder="a22"></td>
+            <td><input type="text" placeholder="a23"></td>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="a31"></td>
+            <td><input type="text" placeholder="a32"></td>
+            <td><input type="text" placeholder="a33"></td>
+        </tr>
+        </tbody></table>
+        <table class="matrix matrix-b"><tbody>
+            <tr>
+                <td><input type="text" placeholder="a11"></td>
+                <td><input type="text" placeholder="a12"></td>
+                <td><input type="text" placeholder="a13"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="a21"></td>
+                <td><input type="text" placeholder="a22"></td>
+                <td><input type="text" placeholder="a23"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="a31"></td>
+                <td><input type="text" placeholder="a32"></td>
+                <td><input type="text" placeholder="a33"></td>
+            </tr>
+            </tbody></table>
+    </div>
+
     </form>
-</div>
-</body>
+</div></body>
 </html>
