@@ -13,13 +13,13 @@
 </head>
 <body>
 <div class="content-container clearfix">
-    <form>
+    <form onsubmit="tryMultiply()">
 
     <div class="sidebar">
         <div class="action-menu">
-            <button class="finish" id="multiply">Умножить матрицы</button>
-            <button id="clear">Очистить матрицы</button>
-            <button id="swap">Поменять матрицы местами</button>
+            <button class="finish" id="multiply" type="submit">Умножить матрицы</button>
+            <button id="clear" type="reset">Очистить матрицы</button>
+            <button id="swap" type="button" onclick="swapMatrices()">Поменять матрицы местами</button>
         </div>
         <div class="matrix-choice">
             <label><input type="radio" name="which-matrix" value="A" checked>Матрица А</label>
@@ -27,10 +27,10 @@
         </div>
         <div class="size-menu">
             <div class="row-menu">
-                <button id="addRow">Добавить</button><button id="removeRow">Удалить</button><span>строку</span>
+                <button id="addRow" type="button" onclick="changeRows(1)">Добавить</button><button id="removeRow" type="button" onclick="changeRows(-1)">Удалить</button><span>строку</span>
             </div>
             <div class="col-menu">
-                <button id="addCol">Добавить</button><button id="removeCol">Удалить</button><span>столбец</span>
+                <button id="addCol" type="button" onclick="changeCols(1)">Добавить</button><button id="removeCol" type="button" onclick="changeCols(-1)">Удалить</button><span>столбец</span>
             </div>
         </div>
         <div class="error-message">
