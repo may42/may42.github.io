@@ -19,27 +19,30 @@ html, body {
 .sidebar.active {
     background-color: #5199DB;
 }
-.sidebar.cantMultiply {
+.sidebar.cant-multiply {
     background-color: #F6C1C0;
 }
-.sidebar .errorMessage {
+.sidebar .error-message {
     color: #DA0902;
-    margin-top: 35px;
     display: none;
 }
-.sidebar.cantMultiply .errorMessage {
+.sidebar.cant-multiply .error-message {
     display: block;
 }
 
 .content {
     float: left;
     padding: 15px 5px 5px 40px;
-    /*     background-color: #ABC; */
+    /*background-color: #ABC;*/
 }
 
-input {
-    margin-bottom: 20px;
+.action-menu {
+    margin-bottom: 54px; /* + button padding 10px = 64px */
 }
+.size-menu {
+    margin-bottom: 35px;
+}
+
 button {
     height: 30px;
     background-color: #ECECEC;
@@ -51,15 +54,18 @@ button {
 }
 button:hover {
     background-color: #DFDFDF;
+    border: 1px solid green;
 }
 button:focus {
     background-color: #ECECEC;
+    border: 1px solid cyan;
 }
 button[disabled] {
     background-color: #F2F2F2;
+    border: 1px solid #D9D9D9;
+    color: #808080;
 }
-
-#multiply {
+button.finish {
     height: 40px;
     padding-left: 18px;
     padding-right: 15px;
@@ -70,7 +76,7 @@ button[disabled] {
     border: 1px solid black;
     left: 1px;
 }
-#multiply:after {
+button.finish:after {
     content: '';
     display: inline-block;
     width: 13px;
@@ -81,11 +87,14 @@ button[disabled] {
     background-color: darkmagenta;
     border: 1px solid black;
 }
-#swap {
-    margin-bottom: 64px; /*67px*/
+input {
+    margin-bottom: 20px;
 }
 
-.top-matrices > *{
+.top-matrices .matrix {
+    display: inline-table; /*старые IE вроде не поддерживают этот тип ?*/
+}
+.top-matrices .matrix, .top-matrices span {
     vertical-align: middle;
 }
 .bottom-matrices {
@@ -94,11 +103,11 @@ button[disabled] {
     margin-top: 40px;
 }
 .matrix {
-    display: inline-table;
     position: relative;
     border-collapse: separate;
     border-spacing: 10px;
     border: 2px solid #404040;
+    padding: -2px;
 }
 .matrix-a {
     margin: 0 10px 0 40px;

@@ -2,28 +2,38 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-<title>matrix calculator</title>
-<meta name="description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы найдете детальное пошаговое решение матричной задачи, которое поможет понять, как найти произведение матриц.">
-<meta name="keywords" content="умножение матриц онлайн, найти произведение матриц, произведение матриц онлайн, вычислить произведение матриц, вычисление, матрица, произведение, умножение, калькулятор, онлайн">
-<meta property="og:type" content="website">
-<meta property="og:description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы найдете детальное пошаговое решение матричной задачи, которое поможет понять, как найти произведение матриц.">
-<link rel="stylesheet" href="reset.css" type="text/css">
-<link rel="stylesheet" href="styles.css" type="text/css">
+    <title>Калькулятор матриц</title>
+    <meta name="keywords" content="умножение матриц онлайн, найти произведение матриц, произведение матриц онлайн, вычислить произведение матриц, вычисление, матрица, произведение, умножение, калькулятор, онлайн">
+    <meta name="description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы можете найти произведение матриц различного размера.">
+    <meta property="og:description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы можете найти произведение матриц различного размера.">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="reset.css" type="text/css">
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
 <div class="content-container clearfix">
     <form>
 
     <div class="sidebar">
-        <button id="multiply">Умножить матрицы</button>
-        <button id="clear">Очистить матрицы</button><br>
-        <button id="swap">Поменять матрицы местами</button><br>
-        <label><input type="radio" name="whichMatrix" value="A" checked>Матрица А</label>
-        <label><input type="radio" name="whichMatrix" value="B">Матрица B</label><br>
-        <button id="addRow">Добавить</button><button id="removeRow">Удалить</button><span>строку</span><br>
-        <button id="addCol">Добавить</button><button id="removeCol">Удалить</button><span>столбец</span><br>
-
-        <div class="errorMessage">
+        <div class="action-menu">
+            <button class="finish" id="multiply">Умножить матрицы</button>
+            <button id="clear">Очистить матрицы</button>
+            <button id="swap">Поменять матрицы местами</button>
+        </div>
+        <div class="matrix-choice">
+            <label><input type="radio" name="which-matrix" value="A" checked>Матрица А</label>
+            <label><input type="radio" name="which-matrix" value="B">Матрица B</label>
+        </div>
+        <div class="size-menu">
+            <div class="row-menu">
+                <button id="addRow">Добавить</button><button id="removeRow">Удалить</button><span>строку</span>
+            </div>
+            <div class="col-menu">
+                <button id="addCol">Добавить</button><button id="removeCol">Удалить</button><span>столбец</span>
+            </div>
+        </div>
+        <div class="error-message">
             Такие матрицы нельзя перемножить, так как количество столбцов матрицы А не равно количеству строк матрицы В.
         </div>
     </div>
@@ -31,19 +41,19 @@
         <div class="top-matrices">
             <table class="matrix result-matrix"><tbody>
             <tr>
-                <td><input type="text" placeholder="c1,1"></td>
-                <td><input type="text" placeholder="c1,2"></td>
-                <td><input type="text" placeholder="c1,3"></td>
+                <td><input type="text" placeholder="c1,1" disabled></td>
+                <td><input type="text" placeholder="c1,2" disabled></td>
+                <td><input type="text" placeholder="c1,3" disabled></td>
             </tr>
             <tr>
-                <td><input type="text" placeholder="c2,1"></td>
-                <td><input type="text" placeholder="c2,2"></td>
-                <td><input type="text" placeholder="c2,3"></td>
+                <td><input type="text" placeholder="c2,1" disabled></td>
+                <td><input type="text" placeholder="c2,2" disabled></td>
+                <td><input type="text" placeholder="c2,3" disabled></td>
             </tr>
             <tr>
-                <td><input type="text" placeholder="c3,1"></td>
-                <td><input type="text" placeholder="c3,2"></td>
-                <td><input type="text" placeholder="c3,3"></td>
+                <td><input type="text" placeholder="c3,1" disabled></td>
+                <td><input type="text" placeholder="c3,2" disabled></td>
+                <td><input type="text" placeholder="c3,3" disabled></td>
             </tr>
             </tbody>
             </table><table class="matrix matrix-a"><tbody>
@@ -82,7 +92,9 @@
                 <td><input type="text" placeholder="b3,2"></td>
                 <td><input type="text" placeholder="b3,3"></td>
             </tr>
-            </tbody></table><br><span>B</span>
+            </tbody>
+            </table>
+            <span>B</span>
         </div>
     </div>
 
