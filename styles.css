@@ -46,7 +46,18 @@ html, body {
     margin-bottom: 35px;
 }
 
+input {
+    line-height: 20px;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+    font-kerning: normal;
+    color: #404040;
+}
 button {
+    line-height: 20px;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+    font-kerning: normal;
     height: 30px;
     background-color: #ECECEC;
     margin: 0 10px 10px 0;
@@ -105,18 +116,41 @@ input {
     text-align: center;
     margin-top: 40px;
 }
+.content span {
+    font-size: 28px;
+    color: #404040;
+}
+
 .matrix {
     position: relative;
-    border-collapse: separate;
-    border-spacing: 10px;
-    border: 2px solid #404040;
-    padding: -2px;
+    /*border: 2px solid #404040;*/
 }
+.matrix:before, .matrix:after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    top: 0;
+    bottom: 0;
+    border: 2px solid #404040;
+}
+.matrix:before {
+    left: 0;
+    border-right: none;
+}
+.matrix:after {
+    right: 0;
+    border-left: none;
+}
+
 .matrix-a {
-    margin: 0 10px 0 40px;
+    margin: 0 20px 0 40px;
 }
 .matrix-b {
-    margin-bottom: 15px;
+    margin-bottom: 19px;
+}
+.matrix table {
+    border-collapse: separate;
+    border-spacing: 10px;
 }
 .matrix td {
     width: 38px;
@@ -125,16 +159,14 @@ input {
 }
 .matrix input {
     margin: 0;
-    padding: 10px 2px 0 0;
-    text-align: center;
-    width: 36px;
-    height: 28px;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    padding: 11px 0 0 0;
     border: 1px solid #D9D9D9;
+    text-align: center;
 }
-.content span {
-    font-size: 30px;
-    color: #404040;
-}
+
 .clearfix:after {
     content: '';
     display: table;
