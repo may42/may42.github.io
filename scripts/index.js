@@ -3,9 +3,9 @@
 var settings = {
     lowerLimit: 2,
     upperLimit: 10,
-    cantMultiplyMessage: function() {
-        console.log('cantMultiplyMessage called successfully! [function is not done]');
-        console.log('It will make sidebar red and show warning "cant multiply" message');
+    changeState: function(canMultiply) {
+        // This function will make sidebar red and show warning "cant multiply" message
+        $('.sidebar').toggleClass('cant-multiply', !canMultiply);
     }
 };
 window.calculator = new Calculator($('.matrix-a tbody'), $('.matrix-b tbody'),

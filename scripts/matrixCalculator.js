@@ -4,18 +4,10 @@
  * settings - is a optional object, that can contain following parameters:
  *     lowerLimit: minimum size (width or height) of all matrices
  *     upperLimit: maximum size (width or height) of all matrices
- *     cantMultiplyMessage: function that will be called if matrices a and b cant be multiplied
+ *     changeState: function that will listen, whether a and b can be multiplied, or not
  */
 window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInputs, settings) {
     "use strict";
-
-    /*var matrices = {
-        lowerLimit: 2,
-        upperLimit: 10,
-        a: { table: $('.matrix-a tbody').first() },
-        b: { table: $('.matrix-b tbody').first() },
-        c: { table: $('.result-matrix tbody').first() }
-    };*/ // OLD
 
     // check if first 3 arguments are correct
     for (var i = 0; i < 3; i++)
@@ -40,7 +32,7 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
     settings = settings || {};
     var lowerLimit = settings.lowerLimit || 1;
     var upperLimit = settings.upperLimit || 8;
-    var cantMultiplyMessage = settings.cantMultiplyMessage || function(){};
+    var changeState = settings.changeState || function(){};
     var matrices = {
         a: { table: aMatrixTable },
         b: { table: bMatrixTable },
@@ -61,30 +53,18 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (!matrix.table || !matrix.rows || !matrix.cols)
             throw new ReferenceError('html of matrix %s seems incorrect', matrix.name);
         // fix matrix size, if its out of range [lowerLimit, upperLimit]
-        if (matrix.rows < lowerLimit) addRows(matrix, lowerLimit - matrix.rows);
-        if (matrix.cols < lowerLimit) addCols(matrix, lowerLimit - matrix.cols);
-        if (matrix.rows > upperLimit) removeRows(matrix, matrix.rows - upperLimit);
-        if (matrix.cols > upperLimit) removeCols(matrix, matrix.cols - upperLimit);
+        fitMatrixWidthInBorders(matrix, lowerLimit, upperLimit);
+        fitMatrixHeightInBorders(matrix, lowerLimit, upperLimit);
     }
     // fix c-matrix size, if it doesn't correspond with matrix-a or matrix-b sizes
-    if (matrices.c.rows < matrices.a.rows) addRows(matrices.c, matrices.a.rows - matrices.c.rows);
-    if (matrices.c.cols < matrices.b.cols) addCols(matrices.c, matrices.b.cols - matrices.c.cols);
-    if (matrices.c.rows > matrices.a.rows) removeRows(matrices.c, matrices.c.rows - matrices.a.rows);
-    if (matrices.c.cols > matrices.b.cols) removeCols(matrices.c, matrices.c.cols - matrices.b.cols);
+    fitMatrixWidthInBorders(matrices.c, matrices.b.cols, matrices.b.cols);
+    fitMatrixHeightInBorders(matrices.c, matrices.a.rows, matrices.a.rows);
+    canMultiply();
 
     /*
      * Returns matrix, that is currently selected with which-matrix radio input
      */
     function whichMatrixSelected() {
-        /*var checkedRadio = $('input[name="which-matrix"]:checked');
-         if (!checkedRadio.length) throw new ReferenceError('no matrix is currently selected with which-matrix radio input');
-         if (checkedRadio.length > 1) throw new ReferenceError('to many matrices is currently selected with which-matrix radio input');
-         var matrixName = checkedRadio.prop('value');
-         if (!matrixName) throw new ReferenceError('which-matrix radio input value is undefined, please set correct value');
-         var matrix = matrices[matrixName];
-         if (!matrix) throw new ReferenceError('which-matrix radio input refers to unknown matrix "' + matrixName + '"');
-         return matrix;
-         */ //OLD
         var checked = radioInputs.filter(':checked');
         if (!checked.length) throw new ReferenceError('no matrix is currently selected with which-matrix radio input');
         return matrices[checked.prop('value')];
@@ -100,6 +80,16 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
             return true;
         }
         return false;
+    }
+
+    function fitMatrixWidthInBorders(matrix, lower, upper) {
+        if (matrix.cols < lower) addCols(matrix, lower - matrix.cols);
+        if (matrix.cols > upper) removeCols(matrix, matrix.cols - upper);
+    }
+
+    function fitMatrixHeightInBorders(matrix, lower, upper) {
+        if (matrix.rows < lower) addRows(matrix, lower - matrix.rows);
+        if (matrix.rows > upper) removeRows(matrix, matrix.rows - upper);
     }
 
     function addRows(matrix, n) {
@@ -165,48 +155,107 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (matrix.name === 'b' && matrices.c.cols) removeCols(matrices.c, n);
     }
 
-    // todo:
     /*
-     * Will make sidebar red and show warning 'cant multiply' message
      * Will return true if matrices can be multiplied, false otherwise
      */
     function canMultiply() {
-        console.log('canMultiply() called successfully! [function is not done]');
+        clearResultingMatrix();
+        var bool = matrices.a.cols === matrices.b.rows;
+        changeState(bool);
+        return bool;
     }
 
-    // todo:
     function tryMultiply() {
-        console.log('tryMultiply() called successfully! [function is not done]');
-
-        //console.log( window.multiplyMatrices(matrices.a.content, matrices.b.content) );
-        console.log( window.multiplyMatrices([[0,0], [0,0], [0,0]], [[0,0,0], [0,0,0]]) );
-
+        if (canMultiply()) {
+            fillContentArrayWithValues(matrices.a); // reading a
+            fillContentArrayWithValues(matrices.b); // reading b
+            matrices.c.content = window.multiplyMatrices(matrices.a.content, matrices.b.content);
+            fillValuesFromContentArray(matrices.c); // writing c
+        }
         // preventing form sending
         event.preventDefault();
     }
 
-    // todo:
     function swapMatrices() {
-        console.log('swapMatrices() called successfully! [function is not done]');
+        var a = matrices.a, b = matrices.b;
+        var buffer = {
+            rows: a.rows,
+            cols: a.cols,
+            content: a.content.slice()
+        };
+        a.rows = b.rows;
+        a.cols = b.cols;
+        a.content = b.content;
+        b.rows = buffer.rows;
+        b.cols = buffer.cols;
+        b.content = buffer.content;
+
+        var fragment = a.table.children().remove();
+        a.table.append(b.table.children().remove());
+        b.table.append(fragment);
+
+        $('input', a.table).each(function(i, e) { $(e).attr('placeholder', 'a' + $(e).attr('placeholder').slice(1)) });
+        $('input', b.table).each(function(i, e) { $(e).attr('placeholder', 'b' + $(e).attr('placeholder').slice(1)) });
+
+        fitMatrixWidthInBorders(matrices.c, b.cols, b.cols);
+        fitMatrixHeightInBorders(matrices.c, a.rows, a.rows);
+        canMultiply();
     }
 
-    /*return {
-        matrices: matrices,
-        whichMatrixSelected: whichMatrixSelected,
-        addRows: addRows,
-        addCols: addCols,
-        removeRows: removeRows,
-        removeCols: removeCols,
-        canMultiply: canMultiply,
-        tryMultiply: tryMultiply,
-        swapMatrices: swapMatrices
-    };*/ // OLD
+    function fillContentArrayWithValues(matrix) {
+        var content = [];
+        var allRows = matrix.table.children();
+        for (var i = 0; i < matrix.rows; i++) {
+            content.push([]);
+            var cells = allRows.eq(i).find('input');
+            if (cells.length < matrix.cols)
+                throw new ReferenceError('row ' + (i + 1) + ' of matrix ' + matrix.name + ' is missing or incomplete');
+            for (var j = 0; j < matrix.cols; j++) {
+                var n = cells.eq(j).prop('value');
+                if (isNaN(n) || !isFinite(n) || n % 1)
+                    throw new TypeError(matrix.name + (i + 1) + ',' + (j + 1) + ' must contain a finite integer, instead got: ' + n);
+                content[i].push(+n);
+            }
+        }
+        matrix.content = content;
+    }
+
+    function fillValuesFromContentArray(matrix) {
+        var content = matrix.content;
+        if (!Array.isArray(content) || content.length < matrix.rows)
+            throw new TypeError(matrix.name + '.content is not an array, or has a wrong length');
+        var allRows = matrix.table.children();
+        for (var i = 0; i < matrix.rows; i++) {
+            if (!Array.isArray(content[i]) || content[i].length < matrix.cols)
+                throw new TypeError(matrix.name + '.content[' + i + '] is not an array, or has a wrong length');
+            var cells = allRows.eq(i).find('input');
+            if (cells.length < matrix.cols)
+                throw new ReferenceError('row ' + (i + 1) + ' of matrix ' + matrix.name + ' is missing or incomplete');
+            for (var j = 0; j < matrix.cols; j++) {
+                cells.eq(j).prop('value', +content[i][j]);
+            }
+        }
+    }
+
+    function clearResultingMatrix() {
+        var c = matrices.c;
+        var allRows = c.table.children();
+        for (var i = 0; i < c.rows; i++) {
+            var cells = allRows.eq(i).find('input');
+            if (cells.length < c.cols)
+                throw new ReferenceError('row ' + (i + 1) + ' of matrix c is missing or incomplete');
+            for (var j = 0; j < c.cols; j++) {
+                cells.eq(j).prop('value', '');
+            }
+        }
+    }
+
     return {
         matrices: matrices,
-        addRow: function() { addRows(whichMatrixSelected(), 1) },
-        addCol: function() { addCols(whichMatrixSelected(), 1) },
-        removeRow: function() { removeRows(whichMatrixSelected(), 1) },
-        removeCol: function() { removeCols(whichMatrixSelected(), 1) },
+        addRow: function() { addRows(whichMatrixSelected(), 1); canMultiply(); },
+        addCol: function() { addCols(whichMatrixSelected(), 1); canMultiply(); },
+        removeRow: function() { removeRows(whichMatrixSelected(), 1); canMultiply(); },
+        removeCol: function() { removeCols(whichMatrixSelected(), 1); canMultiply(); },
         tryMultiply: tryMultiply,
         swapMatrices: swapMatrices
     };
