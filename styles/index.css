@@ -1,0 +1,237 @@
+@font-face {
+    font-family: 'Kontur-Iconic-eco';
+    src: url('fonts/Kontur-Iconic-eco.eot');
+    src: url('fonts/Kontur-Iconic-eco.eot') format('embedded-opentype'),
+        url('fonts/Kontur-Iconic-eco.woff2') format('woff2'),
+        url('fonts/Kontur-Iconic-eco.woff') format('woff'),
+        url('fonts/Kontur-Iconic-eco.ttf') format('truetype'),
+        url('fonts/Kontur-Iconic-eco.svg#Kontur-Iconic-eco') format('svg');
+}
+@font-face {
+    font-family: 'Segoe UI Regular';
+    src: url('fonts/SegoeUIRegular.eot');
+    src: url('fonts/SegoeUIRegular.eot') format('embedded-opentype'),
+    url('fonts/SegoeUIRegular.woff2') format('woff2'),
+    url('fonts/SegoeUIRegular.woff') format('woff'),
+    url('fonts/SegoeUIRegular.ttf') format('truetype'),
+    url('fonts/SegoeUIRegular.svg#SegoeUIRegular') format('svg');
+}
+
+body {
+    line-height: 20px;
+    font-family: "Segoe UI Regular", "Segoe UI", "Arial", sans-serif;
+    font-size: 14px;
+    font-kerning: normal;
+    -webkit-font-kerning: normal;
+    text-rendering: optimizeLegibility;
+    color: #404040;
+}
+.sidebar {
+    float: left;
+    width: 260px;
+    padding: 31px 40px 40px 32px;
+    background-color: #BCBCBC;
+    min-height: 400px;
+    z-index: 0;
+}
+.sidebar.active {
+    background-color: #5199DB;
+}
+.sidebar.cant-multiply {
+    background-color: #F6C1C0;
+}
+
+.action-menu {
+    margin-bottom: 64px;
+}
+.action-menu button[type="submit"] {
+    margin-bottom: 55px;
+}
+.action-menu button[type="reset"] {
+    margin-bottom: 10px;
+}
+.matrix-choice-menu {
+    margin-bottom: 16px;
+}
+.size-menu {
+    margin-bottom: 44px;
+}
+.row-menu {
+    margin-bottom: 10px;
+}
+.sidebar .error-message {
+    color: #DA0902;
+    display: none;
+}
+.sidebar.cant-multiply .error-message {
+    display: block;
+}
+
+.undo-icon:before, .swap-icon:before, .add-icon:before, .minus-icon:before {
+    font-family: "Kontur-Iconic-eco", sans-serif;
+    margin-right: 4px;
+}
+.undo-icon:before { content: '\E012'; }
+.swap-icon:before { content: '\E01F'; }
+.add-icon:before { content: '\E00D'; }
+.minus-icon:before { content: '\E01E'; }
+
+input, button {
+    line-height: 20px;
+    font-family: "Segoe UI Regular", "Segoe UI", "Arial", sans-serif;
+    font-size: 14px;
+    font-kerning: normal;
+}
+
+input[type="text"] {
+    color: #404040;
+    border: 1px solid #D9D9D9;
+}
+input[type="text"][disabled] { }
+input[type="text"]:focus { }
+input[type="text"]:hover { }
+input[type="text"]:active { }
+
+button {
+    height: 30px;
+    background-color: #ECECEC;
+    margin-right: 10px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 0 8px 2px 6px;
+    color: #404040;
+}
+button[disabled] {
+    background-color: #F2F2F2;
+    border: 1px solid gray;
+    color: #808080;
+    outline: none;
+}
+button:focus {
+    background-color: #ECECEC;
+    border: 1px solid #FFF;
+    /*outline: 2px solid #5199DB;*/ /* ISSUE#7 */
+}
+button:hover {
+    background-color: #DFDFDF;
+    border: 1px solid #777;
+}
+button:active {
+    background-color: #D9D9D9;
+    border: 1px solid #777;
+}
+
+button.green {
+    height: 36px;
+    background-color: #38920C;
+    color: #FFF;
+    padding-left: 19px;
+    padding-right: 18px;
+    border-color: rgba(92, 130, 62, 0.7);
+    border-bottom-color: rgba(22, 80, 7, 0.8);
+}
+
+button.pointed {
+    height: 36px;
+    position: relative;
+    padding-left: 19px;
+    padding-right: 17px;
+    border-right: 0;
+    outline: none;
+    z-index: 2;
+    left: 1px; /* возможно этот сдвиг в макете - ошибка. */
+}
+button.pointed:before {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 21.1%;
+    right: -9.1px;
+}
+button.pointed.large:before {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 20.5%;
+    right: -10px;
+}
+button.pointed:before, button.pointed.large:before {
+    content: "";
+    border-radius: 3px;
+    border: inherit;
+    border-right: none;
+    background: inherit;
+    z-index: 1;
+    transform: rotateZ(45deg) skew(16deg, 16deg);
+}
+
+button.large {
+    height: 40px;
+    font-size: 16px;
+    padding-bottom: 4px;
+}
+
+.content {
+    float: left;
+    padding: 15px 5px 5px 40px;
+}
+.top-matrices .matrix {
+    display: inline-table;
+}
+.top-matrices .matrix, .top-matrices span {
+    vertical-align: middle;
+}
+.bottom-matrices {
+    float: left;
+    text-align: center;
+    margin-top: 40px;
+}
+.content span {
+    font-size: 28px;
+    color: #404040;
+}
+
+.matrix {
+    position: relative;
+}
+.matrix:before, .matrix:after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    top: 0;
+    bottom: 0;
+    border: 2px solid #404040;
+}
+.matrix:before {
+    left: 0;
+    border-right: none;
+}
+.matrix:after {
+    right: 0;
+    border-left: none;
+}
+
+.matrix-a {
+    margin: 0 20px 0 40px;
+}
+.matrix-b {
+    margin-bottom: 17px;
+}
+.matrix table {
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+.matrix input {
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    padding: 10px 0 1px;
+}
+
+.clearfix:after {
+    content: '';
+    display: table;
+    visibility: hidden;
+    clear: both;
+}

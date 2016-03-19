@@ -7,30 +7,30 @@
     <meta name="description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы можете найти произведение матриц различного размера.">
     <meta property="og:description" content="Онлайн калькулятор. Умножение матриц. С помощью онлайн калькулятора вы можете найти произведение матриц различного размера.">
     <meta property="og:type" content="website">
-    <link rel="stylesheet" href="reset.css" type="text/css">
-    <link rel="stylesheet" href="styles.css" type="text/css">
+    <link rel="stylesheet" href="styles/vendor/reset.css" type="text/css">
+    <link rel="stylesheet" href="styles/index.css" type="text/css">
     <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
 <div class="content-container clearfix">
     <form onsubmit="tryMultiply()">
 
-    <div class="sidebar">
+    <div class="sidebar cant-multiply">
         <div class="action-menu">
-            <button class="finish" id="multiply" type="submit">Умножить матрицы</button>
-            <button id="clear" type="reset">Очистить матрицы</button>
-            <button id="swap" type="button" onclick="swapMatrices()">Поменять матрицы местами</button>
+            <button id="multiply" type="submit" class="large green pointed">Умножить матрицы</button>
+            <button id="clear" type="reset" class="undo-icon">Очистить матрицы</button>
+            <button id="swap" type="button" class="swap-icon">Поменять матрицы местами</button>
         </div>
-        <div class="matrix-choice">
+        <div class="matrix-choice-menu">
             <label><input type="radio" name="which-matrix" value="A" checked>Матрица А</label>
             <label><input type="radio" name="which-matrix" value="B">Матрица B</label>
         </div>
         <div class="size-menu">
             <div class="row-menu">
-                <button id="addRow" type="button" onclick="changeRows(1)">Добавить</button><button id="removeRow" type="button" onclick="changeRows(-1)">Удалить</button><span>строку</span>
+                <button id="addRow" type="button" class="add-icon">Добавить</button><button id="removeRow" type="button" class="minus-icon">Удалить</button><span>строку</span>
             </div>
             <div class="col-menu">
-                <button id="addCol" type="button" onclick="changeCols(1)">Добавить</button><button id="removeCol" type="button" onclick="changeCols(-1)">Удалить</button><span>столбец</span>
+                <button id="addCol" type="button" class="add-icon">Добавить</button><button id="removeCol" type="button" class="minus-icon">Удалить</button><span>столбец</span>
             </div>
         </div>
         <div class="error-message">
