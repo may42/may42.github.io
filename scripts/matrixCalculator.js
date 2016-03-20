@@ -1,13 +1,27 @@
-/*
- * First 3 arguments - must be jQuery objects, pointed on 3 <tbody> html elements
- * radioInputs - must be a set of 2 jQuery radio inputs with same name, which values are 'a' ond 'b' ['c' is not supported]
- * settings - is a optional object, that can contain following parameters:
- *     lowerLimit: minimum size (width or height) of all matrices
- *     upperLimit: maximum size (width or height) of all matrices
- *     changeState: function that will listen, whether a and b can be multiplied, or not
+/**
+ * Creates a calculator object
+ * @param {jQuery} aMatrixTable - jQuery object pointed on <tbody> element of matrix a
+ * @param {jQuery} bMatrixTable - jQuery object pointed on <tbody> element of matrix b
+ * @param {jQuery} cMatrixTable - jQuery object pointed on <tbody> element of matrix c
+ * @param {jQuery} radioInputs - set of 2 jQuery radio inputs with same name, which values are 'a' and 'b' ('c' is not supported)
+ * @param {Object} settings - optional parameter with settings
+ * @param {number} settings.lowerLimit - integer, minimum size (width or height) of all matrices
+ * @param {number} settings.upperLimit - integer, maximum size (width or height) of all matrices
+ * @param {function} settings.success - function that will be fired when matrix action completed successfully
+ * @param {function} settings.error - function that will handle errors (except the initialization errors)
+ * @returns {object} calculator object
  */
 window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInputs, settings) {
     "use strict";
+
+    settings = settings || {};
+    var lowerLimit = settings.lowerLimit || 1;
+    var upperLimit = settings.upperLimit || 8;
+
+    var success = settings.success;
+    if (typeof success !== "function") success = function(){};
+    var fireError = settings.error;
+    if (typeof fireError !== "function") fireError = function(e){ throw e };
 
     // check if first 3 arguments are correct
     for (var i = 0; i < 3; i++)
@@ -15,8 +29,8 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
             throw new SyntaxError('Argument number ' + (i + 1) + ' must be a jQuery object, pointed on a single tbody html element');
 
     // check if 4th argument is correct
-    radioInputs = function(obj){
-        // меня довольно сильно смущает эта проверка, но другого способа нормального я не придумал.
+    radioInputs = function(obj) {
+        // todo: make this mess less complicated
         if (!obj || !(obj instanceof $)) return;
         obj = obj.filter('input[type="radio"]');
         if (obj.length !== 2) return;
@@ -29,10 +43,6 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
     if (!radioInputs)
         throw new SyntaxError('Argument number 4 must be a jQuery set, containing two radio input elements, with values "a" and "b"');
 
-    settings = settings || {};
-    var lowerLimit = settings.lowerLimit || 1;
-    var upperLimit = settings.upperLimit || 8;
-    var changeState = settings.changeState || function(){};
     var matrices = {
         a: { table: aMatrixTable },
         b: { table: bMatrixTable },
@@ -53,48 +63,67 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (!matrix.table || !matrix.rows || !matrix.cols)
             throw new ReferenceError('html of matrix %s seems incorrect', matrix.name);
         // fix matrix size, if its out of range [lowerLimit, upperLimit]
-        fitMatrixWidthInBorders(matrix, lowerLimit, upperLimit);
-        fitMatrixHeightInBorders(matrix, lowerLimit, upperLimit);
+        fitMatrixWidth(matrix, lowerLimit, upperLimit);
+        fitMatrixHeight(matrix, lowerLimit, upperLimit);
     }
     // fix c-matrix size, if it doesn't correspond with matrix-a or matrix-b sizes
-    fitMatrixWidthInBorders(matrices.c, matrices.b.cols, matrices.b.cols);
-    fitMatrixHeightInBorders(matrices.c, matrices.a.rows, matrices.a.rows);
-    canMultiply();
+    fitMatrixWidth(matrices.c, matrices.b.cols, matrices.b.cols);
+    fitMatrixHeight(matrices.c, matrices.a.rows, matrices.a.rows);
 
-    /*
+    if (matrices.a.cols !== matrices.b.rows) fireError(new Error("Bad matrix sizes"));
+
+    /**
      * Returns matrix, that is currently selected with which-matrix radio input
+     * @returns {object} matrix that is currently selected
      */
     function whichMatrixSelected() {
         var checked = radioInputs.filter(':checked');
+        // todo: catch this error correctly:
         if (!checked.length) throw new ReferenceError('no matrix is currently selected with which-matrix radio input');
         return matrices[checked.prop('value')];
     }
 
-    /*
-     * Returns true if new size is out of range [lowerLimit, upperLimit], false otherwise
+    /**
+     * Checks if given matrix size is out of lowerLimit--upperLimit range
+     * @param {number} size
+     * @returns {boolean}
      */
-    function isSizeOutOfRange(was, adding) {
-        var become = was + adding;
-        if (become < lowerLimit || become > upperLimit) {
-            console.log('cant make ' + become + ' rows/cols, this size is out of range!');
-            return true;
-        }
-        return false;
+    function isSizeOutOfRange(size) {
+        var outOfRange = size < lowerLimit || size > upperLimit;
+        if (outOfRange) console.log('cant make ' + size + ' rows/cols, this size is out of range!');
+        return outOfRange;
     }
 
-    function fitMatrixWidthInBorders(matrix, lower, upper) {
+    /**
+     * Crops matrix width within given range
+     * @param {object} matrix - matrix to be cropped
+     * @param {number} lower - lower boundary of a range
+     * @param {number} upper - upper boundary of a range
+     */
+    function fitMatrixWidth(matrix, lower, upper) {
         if (matrix.cols < lower) addCols(matrix, lower - matrix.cols);
         if (matrix.cols > upper) removeCols(matrix, matrix.cols - upper);
     }
 
-    function fitMatrixHeightInBorders(matrix, lower, upper) {
+    /**
+     * Crops matrix height within given range
+     * @param {object} matrix - matrix to be cropped
+     * @param {number} lower - lower boundary of a range
+     * @param {number} upper - upper boundary of a range
+     */
+    function fitMatrixHeight(matrix, lower, upper) {
         if (matrix.rows < lower) addRows(matrix, lower - matrix.rows);
         if (matrix.rows > upper) removeRows(matrix, matrix.rows - upper);
     }
 
+    /**
+     * Adds rows to a matrix
+     * @param {object} matrix
+     * @param {number} n - number of rows to be added
+     */
     function addRows(matrix, n) {
-        if (!n || isNaN(n) || !isFinite(n) || n % 1 || n < 1) throw new TypeError(n + ' - is not a finite positive integer');
-        if (isSizeOutOfRange(matrix.rows, +n)) return;
+        if (!isPositiveInteger(n)) return;
+        if (isSizeOutOfRange(matrix.rows + n)) return;
         // lets insert multiple tr at once with single jQuery set of elements
         var fragment = $();
         var isDisabled = matrix.name === 'c' ? ' disabled' : '';
@@ -112,9 +141,14 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (matrix.name === 'a' && matrices.c.rows) addRows(matrices.c, n);
     }
 
+    /**
+     * Removes rows from a matrix
+     * @param {object} matrix
+     * @param {number} n - number of rows to be removed
+     */
     function removeRows(matrix, n) {
-        if (!n || isNaN(n) || !isFinite(n) || n % 1 || n < 1) throw new TypeError(n + ' - is not a finite positive integer');
-        if (isSizeOutOfRange(matrix.rows, -n)) return;
+        if (!isPositiveInteger(n)) return;
+        if (isSizeOutOfRange(matrix.rows - n)) return;
         var rows = matrix.table.children();
         for (var i = rows.length - 1; i >= matrix.rows - n; i--) {
             rows[i].remove();
@@ -124,9 +158,14 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (matrix.name === 'a' && matrices.c.rows) removeRows(matrices.c, n);
     }
 
+    /**
+     * Adds columns to a matrix
+     * @param {object} matrix
+     * @param {number} n - number of columns to be added
+     */
     function addCols(matrix, n) {
-        if (!n || isNaN(n) || !isFinite(n) || n % 1 || n < 1) throw new TypeError(n + ' - is not a finite positive integer');
-        if (isSizeOutOfRange(matrix.cols, +n)) return;
+        if (!isPositiveInteger(n)) return;
+        if (isSizeOutOfRange(matrix.cols + n)) return;
         var isDisabled = matrix.name === 'c' ? ' disabled' : '';
         var rows = matrix.table.children();
         for (var i = 0; i < rows.length; i++) {
@@ -140,9 +179,14 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (matrix.name === 'b' && matrices.c.cols) addCols(matrices.c, n);
     }
 
+    /**
+     * Removes columns from a matrix
+     * @param {object} matrix
+     * @param {number} n - number of columns to be removed
+     */
     function removeCols(matrix, n) {
-        if (!n || isNaN(n) || !isFinite(n) || n % 1 || n < 1) throw new TypeError(n + ' - is not a finite positive integer');
-        if (isSizeOutOfRange(matrix.cols, -n)) return;
+        if (!isPositiveInteger(n)) return;
+        if (isSizeOutOfRange(matrix.cols - n)) return;
         var rows = matrix.table.children();
         for (var i = 0; i < matrix.rows; i++) {
             var cells = rows.eq(i).children();
@@ -155,27 +199,42 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (matrix.name === 'b' && matrices.c.cols) removeCols(matrices.c, n);
     }
 
-    /*
-     * Will return true if matrices can be multiplied, false otherwise
+    /**
+     * Checks if matrices can be multiplied, calls success function if they can, calls error handler otherwise
+     * @returns {boolean} can matrices be multiplied or not
      */
     function canMultiply() {
-        clearResultingMatrix();
-        var bool = matrices.a.cols === matrices.b.rows;
-        changeState(bool);
-        return bool;
+        try { clearResultingMatrix() } catch(e) {
+            fireError(e);
+            return false;
+        }
+        var allowed = matrices.a.cols === matrices.b.rows;
+        if (allowed) success();
+        else fireError(new Error("Bad matrix sizes"));
+        return allowed;
     }
 
+    /**
+     * Tries to multiply current matrices a and b, and display result in matrix c
+     */
     function tryMultiply() {
-        if (canMultiply()) {
-            fillContentArrayWithValues(matrices.a); // reading a
-            fillContentArrayWithValues(matrices.b); // reading b
-            matrices.c.content = window.multiplyMatrices(matrices.a.content, matrices.b.content);
-            fillValuesFromContentArray(matrices.c); // writing c
-        }
         // preventing form sending
         event.preventDefault();
+        if (canMultiply()) {
+            try {
+                readMatrix(matrices.a);
+                readMatrix(matrices.b);
+                matrices.c.content = window.multiplyMatrices(matrices.a.content, matrices.b.content);
+                writeMatrix(matrices.c);
+            } catch(e) {
+                fireError(e);
+            }
+        }
     }
 
+    /**
+     * Swaps matrices a and b
+     */
     function swapMatrices() {
         var a = matrices.a, b = matrices.b;
         var buffer = {
@@ -197,12 +256,16 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         $('input', a.table).each(function(i, e) { $(e).attr('placeholder', 'a' + $(e).attr('placeholder').slice(1)) });
         $('input', b.table).each(function(i, e) { $(e).attr('placeholder', 'b' + $(e).attr('placeholder').slice(1)) });
 
-        fitMatrixWidthInBorders(matrices.c, b.cols, b.cols);
-        fitMatrixHeightInBorders(matrices.c, a.rows, a.rows);
+        fitMatrixWidth(matrices.c, b.cols, b.cols);
+        fitMatrixHeight(matrices.c, a.rows, a.rows);
         canMultiply();
     }
 
-    function fillContentArrayWithValues(matrix) {
+    /**
+     * Reads matrix content from matrix.table html element and places it in matrix.content array
+     * @param {object} matrix
+     */
+    function readMatrix(matrix) {
         var content = [];
         var allRows = matrix.table.children();
         for (var i = 0; i < matrix.rows; i++) {
@@ -212,15 +275,19 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
                 throw new ReferenceError('row ' + (i + 1) + ' of matrix ' + matrix.name + ' is missing or incomplete');
             for (var j = 0; j < matrix.cols; j++) {
                 var n = cells.eq(j).prop('value');
-                if (isNaN(n) || !isFinite(n) || n % 1)
-                    throw new TypeError(matrix.name + (i + 1) + ',' + (j + 1) + ' must contain a finite integer, instead got: ' + n);
+                if (isNaN(n) || !isFinite(n))
+                     throw new TypeError(matrix.name + (i + 1) + ',' + (j + 1) + ' must contain a finite number, instead got: "' + n + '"');
                 content[i].push(+n);
             }
         }
         matrix.content = content;
     }
 
-    function fillValuesFromContentArray(matrix) {
+    /**
+     * Writes matrix content from matrix.content array to matrix.table html element
+     * @param {object} matrix
+     */
+    function writeMatrix(matrix) {
         var content = matrix.content;
         if (!Array.isArray(content) || content.length < matrix.rows)
             throw new TypeError(matrix.name + '.content is not an array, or has a wrong length');
@@ -237,6 +304,9 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         }
     }
 
+    /**
+     * Clears matrix c html element
+     */
     function clearResultingMatrix() {
         var c = matrices.c;
         var allRows = c.table.children();
@@ -248,6 +318,18 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
                 cells.eq(j).prop('value', '');
             }
         }
+    }
+
+    /**
+     * Calls error function if n is not a finite positive integer
+     * @param {number} n - number to be checked
+     */
+    function isPositiveInteger(n) {
+        if (!n || isNaN(n) || !isFinite(n) || n % 1 || n < 1) {
+            fireError(new TypeError(n + ' - is not a finite positive integer'));
+            return false;
+        }
+        return true;
     }
 
     return {
