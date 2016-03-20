@@ -5,7 +5,7 @@ var settings = {
     upperLimit: 10,
     changeState: function(canMultiply) {
         // This function will make sidebar red and show warning "cant multiply" message
-        $('.sidebar').toggleClass('cant-multiply', !canMultiply);
+        $('.sidebar').toggleClass('error', !canMultiply);
     }
 };
 window.calculator = new Calculator($('.matrix-a tbody'), $('.matrix-b tbody'),

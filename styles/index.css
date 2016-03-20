@@ -1,101 +1,238 @@
-html, body {
+@font-face {
+    font-family: 'Kontur-Iconic-eco';
+    src: url('fonts/Kontur-Iconic-eco.eot');
+    src: url('fonts/Kontur-Iconic-eco.eot') format('embedded-opentype'),
+        url('fonts/Kontur-Iconic-eco.woff2') format('woff2'),
+        url('fonts/Kontur-Iconic-eco.woff') format('woff'),
+        url('fonts/Kontur-Iconic-eco.ttf') format('truetype'),
+        url('fonts/Kontur-Iconic-eco.svg#Kontur-Iconic-eco') format('svg');
+}
+@font-face {
+    font-family: 'Segoe UI Regular';
+    src: url('fonts/SegoeUIRegular.eot');
+    src: url('fonts/SegoeUIRegular.eot') format('embedded-opentype'),
+    url('fonts/SegoeUIRegular.woff2') format('woff2'),
+    url('fonts/SegoeUIRegular.woff') format('woff'),
+    url('fonts/SegoeUIRegular.ttf') format('truetype'),
+    url('fonts/SegoeUIRegular.svg#SegoeUIRegular') format('svg');
+}
+html, body, .content-container, .sidebar {
+    height: 100%;
+}
+body {
     line-height: 20px;
-    font-family: "Segoe UI", sans-serif;
+    font-family: "Segoe UI Regular", "Segoe UI", "Arial", sans-serif;
     font-size: 14px;
     font-kerning: normal;
-    color: #404040;
+    -webkit-font-kerning: normal;
+    text-rendering: optimizeLegibility;
 }
 .content-container {
-    background-color: #FAFAFA;
+    position: relative;
 }
-
 .sidebar {
-    float: left;
-    width: 268px;
-    padding: 32px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 260px;
+    padding: 31px 40px 40px 32px;
     background-color: #BCBCBC;
-    min-height: 400px;
 }
 .sidebar.active {
     background-color: #5199DB;
 }
-.sidebar.cant-multiply {
+.sidebar.error {
     background-color: #F6C1C0;
+}
+.content {
+    position: absolute;
+    top: 0;
+    left: 332px;
+    padding: 15px 5px 5px 40px;
+}
+
+.action-menu {
+    margin-bottom: 64px;
+}
+.action-menu button[type="submit"] {
+    margin-bottom: 55px;
+}
+.action-menu button[type="reset"] {
+    margin-bottom: 10px;
+}
+.matrix-choice-menu {
+    margin-bottom: 16px;
+}
+.size-menu {
+    margin-bottom: 44px;
+}
+.row-menu {
+    margin-bottom: 10px;
 }
 .sidebar .error-message {
     color: #DA0902;
     display: none;
 }
-.sidebar.cant-multiply .error-message {
+.sidebar.error .error-message {
     display: block;
 }
 
-.content {
-    float: left;
-    padding: 15px 5px 5px 40px;
-    /*background-color: #ABC;*/
+.undo-icon:before, .swap-icon:before, .add-icon:before, .minus-icon:before {
+    font-family: "Kontur-Iconic-eco", sans-serif;
+    margin-right: 4px;
+}
+.undo-icon:before { content: '\E012'; }
+.swap-icon:before { content: '\E01F'; }
+.add-icon:before { content: '\E00D'; }
+.minus-icon:before { content: '\E01E'; }
+
+input, button {
+    line-height: 20px;
+    font-family: "Segoe UI Regular", "Segoe UI", "Arial", sans-serif;
+    font-size: 14px;
+    font-kerning: normal;
 }
 
-.action-menu {
-    margin-bottom: 54px; /* + button padding 10px = 64px */
+input[type="text"] {
+    color: #404040;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-top-color: rgba(0, 0, 0, 0.3);
+    background-color: #FFF;
+    box-shadow: inset 0 1px #F2F2F2;
 }
-.action-menu .finish {
-    margin-bottom: 55px;
+input[type="text"][disabled] {
+    color: #C9C9C9;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #F2F2F2;
+    box-shadow: none;
 }
-.size-menu {
-    margin-bottom: 35px;
+input[type="text"]:focus {
+    color: #000;
+    outline: 2px solid #5199DB;
+    border: 1px solid rgba(1, 1, 1, 0.15);
+    background-color: #FFF;
+    box-shadow: none;
 }
 
 button {
     height: 30px;
-    background-color: #ECECEC;
-    margin: 0 10px 10px 0;
-    border: 1px solid gray;
-    border-radius: 2px;
-    padding-right: 9px;
+    margin-right: 10px;
+    padding: 0 8px 2px 6px;
     color: #404040;
-}
-button:hover {
-    background-color: #DFDFDF;
-    border: 1px solid green;
-}
-button:focus {
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom-color: rgba(0, 0, 0, 0.3);
     background-color: #ECECEC;
-    border: 1px solid cyan;
+    background: -webkit-linear-gradient(top, #ECECEC, #FEFEFE);
+    background: linear-gradient(to bottom, #ECECEC, #FEFEFE);
 }
 button[disabled] {
-    background-color: #F2F2F2;
-    border: 1px solid #D9D9D9;
     color: #808080;
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #F2F2F2;
+    background: -webkit-linear-gradient(top, #F2F2F2, #F2F2F2);
+    background: linear-gradient(to bottom, #F2F2F2, #F2F2F2);
 }
-/*input[type="submit"], button[type="submit"]*/
-input[type="submit"], button[type="submit"] {
-    height: 40px;
-    padding-left: 18px;
-    padding-right: 15px;
-    position: relative;
-    background-color: #38920C;
-    color: #FFF;
-    border: 1px solid black;
-    left: 1px; /* возможно этот сдвиг в макете - ошибка. */
+button:focus {
+    outline: 2px solid #5199DB;
+    border: 1px solid rgba(255, 255, 255, 1);
+    background-color: #ECECEC;
+    background: -webkit-linear-gradient(top, #ECECEC, #FDFDFD);
+    background: linear-gradient(to bottom, #ECECEC, #FDFDFD);
 }
-button.finish:after {
-    content: '';
-    display: inline-block;
-    width: 13px;
-    height: 100%;
-    position: absolute;
-    right: -13px;
-    top: -1px;
-    background-color: darkmagenta;
-    border: inherit;
+button:hover {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom-color: rgba(0, 0, 0, 0.3);
+    background-color: #DFDFDF;
+    background: -webkit-linear-gradient(top, #DFDFDF, #DFDFDF);
+    background: linear-gradient(to bottom, #DFDFDF, #DFDFDF);
 }
-input {
-    margin-bottom: 20px;
+button:active {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-top-color: rgba(0, 0, 0, 0.35);
+    background-color: #D9D9D9;
+    background: -webkit-linear-gradient(top, #D9D9D9, #D9D9D9);
+    background: linear-gradient(to bottom, #D9D9D9, #D9D9D9);
 }
 
+button.green {
+    height: 36px;
+    color: #FFF;
+    padding-left: 19px;
+    padding-right: 18px;
+    border: 1px solid rgba(92, 130, 62, 0.7);
+    border-bottom-color: rgba(22, 80, 7, 0.8);
+    background-color: #4BA91D;
+    background: -webkit-linear-gradient(top, #4BA91D, #38920C);
+    background: linear-gradient(to bottom, #4BA91D, #38920C);
+}
+button.green:hover {
+    border: 1px solid rgba(8, 73, 2, 0.7);
+    border-bottom-color: rgba(19, 71, 4, 0.8);
+    background-color: #3B8D13;
+    background: -webkit-linear-gradient(top, #3B8D13, #317E0B);
+    background: linear-gradient(to bottom, #3B8D13, #317E0B);
+}
+button.green:active {
+    border: 1px solid rgba(7, 57, 0, 0.7);
+    border-top-color: rgba(13, 40, 0, 0.8);
+    background-color: #35840E;
+    background: -webkit-linear-gradient(top, #35840E, #35840E);
+    background: linear-gradient(to bottom, #35840E, #35840E);
+}
+
+button.pointed {
+    height: 36px;
+    position: relative;
+    padding-left: 19px;
+    padding-right: 15px;
+    left: 1px;
+}
+button.pointed:before {
+    content: "";
+    position: absolute;
+    width: 18px; height: 18px;
+    top: 21.1%; right: -9px;
+    border-radius: 2px;
+    border: inherit;
+    border-bottom: none;
+    border-left: none;
+    background: inherit;
+    transform: rotateZ(45deg) skew(16deg, 16deg);
+}
+button.pointed.large:before {
+    width: 21px; height: 21px;
+    top: 20.5%; right: -11px;
+}
+button.pointed.green:before {
+    right: -12px;
+    background-color: #4BA91D;
+    background: -webkit-linear-gradient(135deg, #4BA91D, #38920C 110%);
+    background: linear-gradient(135deg, #4BA91D, #38920C 110%);
+}
+button.pointed.green:hover:before {
+    background-color: #3B8D13;
+    background: -webkit-linear-gradient(135deg, #3B8D13, #317E0B 110%);
+    background: linear-gradient(135deg, #3B8D13, #317E0B 110%);
+}
+button.pointed.green:active:before {
+    background-color: #35840E;
+    background: -webkit-linear-gradient(135deg, #35840E, #35840E 110%);
+    background: linear-gradient(135deg, #35840E, #35840E 110%);
+}
+
+button.large {
+    height: 40px;
+    font-size: 16px;
+    padding-bottom: 4px;
+}
+
+.top-matrices {
+    white-space: nowrap;
+}
 .top-matrices .matrix {
-    display: inline-table; /*старые IE вроде не поддерживают этот тип ?*/
+    display: inline-table;
 }
 .top-matrices .matrix, .top-matrices span {
     vertical-align: middle;
@@ -105,39 +242,45 @@ input {
     text-align: center;
     margin-top: 40px;
 }
-.matrix {
-    position: relative;
-    border-collapse: separate;
-    border-spacing: 10px;
-    border: 2px solid #404040;
-    padding: -2px;
-}
-.matrix-a {
-    margin: 0 10px 0 40px;
-}
-.matrix-b {
-    margin-bottom: 15px;
-}
-.matrix td {
-    width: 38px;
-    height: 38px;
-    border: none;
-}
-.matrix input {
-    margin: 0;
-    padding: 10px 2px 0 0;
-    text-align: center;
-    width: 36px;
-    height: 28px;
-    border: 1px solid #D9D9D9;
-}
 .content span {
-    font-size: 30px;
+    font-size: 28px;
     color: #404040;
 }
-.clearfix:after {
+
+.matrix {
+    position: relative;
+}
+.matrix:before, .matrix:after {
     content: '';
-    display: table;
-    visibility: hidden;
-    clear: both;
+    position: absolute;
+    width: 8px;
+    top: 0;
+    bottom: 0;
+    border: 2px solid #404040;
+}
+.matrix:before {
+    left: 0;
+    border-right: none;
+}
+.matrix:after {
+    right: 0;
+    border-left: none;
+}
+
+.matrix-a {
+    margin: 0 20px 0 40px;
+}
+.matrix-b {
+    margin-bottom: 17px;
+}
+.matrix table {
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+.matrix input {
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    padding: 10px 0 1px;
 }
