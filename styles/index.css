@@ -94,7 +94,7 @@ input, button {
 }
 
 input[type="text"] {
-    color: #D4D4D4;
+    color: #404040;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-top-color: rgba(0, 0, 0, 0.3);
     background-color: #FFF;
