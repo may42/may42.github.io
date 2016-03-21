@@ -151,7 +151,7 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         if (isSizeOutOfRange(matrix.rows - n)) return;
         var rows = matrix.table.children();
         for (var i = rows.length - 1; i >= matrix.rows - n; i--) {
-            rows[i].remove();
+            rows.eq(i).remove();
         }
         matrix.rows -= n;
         // matrices.c.rows check is needed to prevent filling in initialization phase
@@ -191,7 +191,7 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         for (var i = 0; i < matrix.rows; i++) {
             var cells = rows.eq(i).children();
             for (var j = cells.length - 1; j >= matrix.cols - n; j--) {
-                cells[j].remove();
+                cells.eq(j).remove();
             }
         }
         matrix.cols -= n;
@@ -217,7 +217,7 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
     /**
      * Tries to multiply current matrices a and b, and display result in matrix c
      */
-    function tryMultiply() {
+    function tryMultiply(event) {
         // preventing form sending
         event.preventDefault();
         if (canMultiply()) {
