@@ -218,8 +218,7 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
      * Tries to multiply current matrices a and b, and display result in matrix c
      */
     function tryMultiply(event) {
-        // preventing form sending
-        event.preventDefault();
+        event = event || window.event;
         if (canMultiply()) {
             try {
                 readMatrix(matrices.a);
@@ -230,6 +229,8 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
                 fireError(e);
             }
         }
+        // preventing form sending:
+        event.preventDefault ? event.preventDefault() : (event.returnValue = false); // for IE8
     }
 
     /**

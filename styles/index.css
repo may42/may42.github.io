@@ -16,7 +16,7 @@
     url('fonts/SegoeUIRegular.ttf') format('truetype'),
     url('fonts/SegoeUIRegular.svg#SegoeUIRegular') format('svg');
 }
-html, body, .content-container, .sidebar {
+html, body {
     height: 100%;
 }
 body {
@@ -29,12 +29,15 @@ body {
 }
 .content-container {
     position: relative;
+    min-height: 100%;
 }
 .sidebar {
     position: absolute;
+    min-height: 100%;
+    box-sizing: border-box;
     top: 0;
-    bottom: 0;
-    width: 260px;
+    left: 0;
+    width: 332px;
     padding: 31px 40px 40px 32px;
     background-color: #BCBCBC;
 }
@@ -45,9 +48,7 @@ body {
     background-color: #F6C1C0;
 }
 .content {
-    position: absolute;
-    top: 0;
-    left: 332px;
+    margin-left: 332px;
     padding: 15px 5px 5px 40px;
 }
 
@@ -238,7 +239,7 @@ button.large {
     vertical-align: middle;
 }
 .bottom-matrices {
-    float: left;
+    display: inline-block;
     text-align: center;
     margin-top: 40px;
 }
