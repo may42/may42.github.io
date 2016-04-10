@@ -38,6 +38,8 @@
         $("#removeRow").click(calculator.removeRow);
         $("#removeCol").click(calculator.removeCol);
 
+        $("input").mask("00");
+
     } catch(e) {
         $('.sidebar').toggleClass('error', true);
         $('.sidebar .error-message').text('Извините, при запуске калькулятора произошла ошибка!');
