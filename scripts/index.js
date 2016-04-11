@@ -38,7 +38,17 @@
         $("#removeRow").click(calculator.removeRow);
         $("#removeCol").click(calculator.removeCol);
 
-        $("td input").mask("00");
+        $(".matrix input").mask("00");
+
+        $("#calculator-form button, #calculator-form input").focus(function(){
+            $('.sidebar').toggleClass('active', true);
+        });
+
+        $("body").click(function(event){
+            var sidebarElement = !!$(event.target).closest(".sidebar, .matrix").length;
+            $('.sidebar').toggleClass('active', sidebarElement);
+        })
+
 
     } catch(e) {
         $('.sidebar').toggleClass('error', true);
