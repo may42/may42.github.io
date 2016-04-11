@@ -13,13 +13,11 @@
         error: function(e) {
             $('.sidebar').toggleClass('error', true);
             var div = $('.sidebar .error-message');
-            if (e.message === 'Bad matrix sizes') {
-                div.text('Такие матрицы нельзя перемножить, так как количество столбцов матрицы А не равно количеству строк матрицы В.');
-            } else if (logUnknownErrors) {
-                div.text('Извините, произошла ошибка!\n' + e.name + ': ' + e.message);
-            } else {
-                div.text('Извините, произошла ошибка!');
-            }
+            var text = 'Извините, произошла ошибка!';
+            if (logUnknownErrors) text += '\n' + e.name + ': ' + e.message;
+            if (e.message === 'Bad matrix sizes')
+                text = 'Такие матрицы нельзя перемножить, так как количество столбцов матрицы А не равно количеству строк матрицы В.';
+            div.text(text);
         }
     };
 

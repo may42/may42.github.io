@@ -24,24 +24,23 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
     if (typeof fireError !== "function") fireError = function(e){ throw e };
 
     // check if first 3 arguments are correct
-    for (var i = 0; i < 3; i++)
-        if (!arguments[i] || !(arguments[i] instanceof $) || arguments[i].length !== 1 || arguments[i].prop("tagName") !== 'TBODY')
+    for (var i = 0, args = arguments; i < 3; i++)
+        if (!args[i] || !(args[i] instanceof $) || args[i].length !== 1 || args[i].prop("tagName") !== 'TBODY')
             throw new SyntaxError('Argument number ' + (i + 1) + ' must be a jQuery object, pointed on a single tbody html element');
 
     // check if 4th argument is correct
-    radioInputs = function(obj) {
-        // todo: make this mess less complicated
-        if (!obj || !(obj instanceof $)) return;
-        obj = obj.filter('input[type="radio"]');
-        if (obj.length !== 2) return;
-        var value = obj.first().prop('value');
-        if (value !== 'a' && value !== 'b') return;
-        value = obj.last().prop('value');
-        if (value !== 'a' && value !== 'b') return;
-        return obj;
-    }(radioInputs);
-    if (!radioInputs)
-        throw new SyntaxError('Argument number 4 must be a jQuery set, containing two radio input elements, with values "a" and "b"');
+    if (!radioInputs || !(radioInputs instanceof $))
+        throw new SyntaxError('Argument number 4 must be a jQuery set');
+    radioInputs = radioInputs.filter('input[type="radio"]');
+    if (radioInputs.length !== 2)
+        throw new SyntaxError('Argument number 4 must contain two radio input elements');
+    if (radioInputs.filter('*:checked').length !== 1)
+        throw new SyntaxError('One of the radio inputs must be checked');
+    for (i = 0; i < 2; i++) {
+        var radioValue = radioInputs.eq(i).prop('value');
+        if (radioValue !== 'a' && radioValue !== 'b')
+            throw new SyntaxError('Expected radio input value "a" or "b", instead got "' + radioValue + '"');
+    }
 
     var matrices = {
         a: { table: aMatrixTable },
@@ -77,9 +76,9 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
      * @returns {object} matrix that is currently selected
      */
     function whichMatrixSelected() {
-        var checked = radioInputs.filter(':checked');
-        // todo: catch this error correctly:
-        if (!checked.length) throw new ReferenceError('no matrix is currently selected with which-matrix radio input');
+        var checked = radioInputs.filter('*:checked');
+        if (!checked.length)
+            throw new ReferenceError('no matrix is currently selected with which-matrix radio input');
         return matrices[checked.prop('value')];
     }
 
