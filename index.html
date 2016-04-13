@@ -16,13 +16,15 @@
     <form id="calculator-form">
     <div class="sidebar">
         <div class="action-menu">
-            <button id="multiply" type="submit" class="large green pointed">Умножить матрицы</button>
+            <button id="multiply" type="submit" class="continueButton">Умножить матрицы</button>
             <button id="clear" type="reset" class="undo-icon">Очистить матрицы</button>
             <button id="swap" type="button" class="swap-icon">Поменять матрицы местами</button>
         </div>
         <div class="matrix-choice-menu">
-            <label><input type="radio" name="which-matrix" value="a" checked>Матрица А</label>
-            <label><input type="radio" name="which-matrix" value="b">Матрица B</label>
+            <input type="radio" name="which-matrix" value="a" id="radio-a" checked>
+            <label for="radio-a"><span class="radio"></span>Матрица А</label>
+            <input type="radio" name="which-matrix" value="b" id="radio-b">
+            <label for="radio-b"><span class="radio"></span>Матрица B</label>
         </div>
         <div class="size-menu">
             <div class="row-menu">
@@ -32,6 +34,7 @@
                 <button id="addCol" type="button" class="add-icon">Добавить</button><button id="removeCol" type="button" class="minus-icon">Удалить</button><span>столбец</span>
             </div>
         </div>
+
         <div class="error-message">
             Такие матрицы нельзя перемножить, так как количество столбцов матрицы А не равно количеству строк матрицы В.
         </div>
