@@ -3,7 +3,8 @@
  * @param {jQuery} aMatrixTable - jQuery object pointed on <tbody> element of matrix a
  * @param {jQuery} bMatrixTable - jQuery object pointed on <tbody> element of matrix b
  * @param {jQuery} cMatrixTable - jQuery object pointed on <tbody> element of matrix c
- * @param {jQuery} radioInputs - set of 2 jQuery radio inputs with same name, which values are 'a' and 'b' ('c' is not supported)
+ * @param {jQuery} radioInputs - set of 2 jQuery radio inputs with
+ *     same name, which values are 'a' and 'b' ('c' is not supported)
  * @param {Object} settings - optional parameter with settings
  * @param {number} settings.lowerLimit - integer, minimum size (width or height) of all matrices
  * @param {number} settings.upperLimit - integer, maximum size (width or height) of all matrices
@@ -26,7 +27,8 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
     // check if first 3 arguments are correct
     for (var i = 0, args = arguments; i < 3; i++)
         if (!args[i] || !(args[i] instanceof $) || args[i].length !== 1 || args[i].prop("tagName") !== 'TBODY')
-            throw new SyntaxError('Argument number ' + (i + 1) + ' must be a jQuery object, pointed on a single tbody html element');
+            throw new SyntaxError('Argument number ' + (i + 1) +
+                ' must be a jQuery object, pointed on a single tbody html element');
 
     // check if 4th argument is correct
     if (!radioInputs || !(radioInputs instanceof $))
@@ -169,7 +171,8 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         var rows = matrix.table.children();
         for (var i = 0; i < rows.length; i++) {
             for (var j = rows.eq(i).children().length + 1; j <= matrix.cols + n; j++) {
-                $('<td><input type="text" placeholder="' + matrix.name + (i + 1) + ',' + j + '"' + isDisabled + '></td>')
+                var placeholder = matrix.name + (i + 1) + ',' + j;
+                $('<td><input type="text" placeholder="' + placeholder + '"' + isDisabled + '></td>')
                     .appendTo(rows[i]);
             }
         }
@@ -275,8 +278,13 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
                 throw new ReferenceError('row ' + (i + 1) + ' of matrix ' + matrix.name + ' is missing or incomplete');
             for (var j = 0; j < matrix.cols; j++) {
                 var n = cells.eq(j).prop('value');
+                if (n == '-') {
+                    cells.eq(j).prop('value', '');
+                    n = "0"
+                }
                 if (isNaN(n) || !isFinite(n))
-                     throw new TypeError(matrix.name + (i + 1) + ',' + (j + 1) + ' must contain a finite number, instead got: "' + n + '"');
+                     throw new TypeError(matrix.name + (i + 1) + ',' + (j + 1) +
+                         ' must contain a finite number, instead got: "' + n + '"');
                 content[i].push(+n);
             }
         }
@@ -332,6 +340,15 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         return true;
     }
 
+    /**
+     * Writes array-content of the matrices to the DOM
+     */
+    function update() {
+        writeMatrix(matrices.a);
+        writeMatrix(matrices.b);
+        writeMatrix(matrices.c);
+    }
+
     return {
         matrices: matrices,
         addRow: function() { addRows(whichMatrixSelected(), 1); canMultiply(); },
@@ -339,6 +356,7 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
         removeRow: function() { removeRows(whichMatrixSelected(), 1); canMultiply(); },
         removeCol: function() { removeCols(whichMatrixSelected(), 1); canMultiply(); },
         tryMultiply: tryMultiply,
-        swapMatrices: swapMatrices
+        swapMatrices: swapMatrices,
+        updateAllValues: update
     };
 };
