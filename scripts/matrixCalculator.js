@@ -220,7 +220,6 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
      * Tries to multiply current matrices a and b, and display result in matrix c
      */
     function tryMultiply(event) {
-        event = event || window.event;
         if (canMultiply()) {
             try {
                 readMatrix(matrices.a);
@@ -232,7 +231,8 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
             }
         }
         // preventing form sending:
-        event.preventDefault ? event.preventDefault() : (event.returnValue = false); // for IE8
+        event.preventDefault();
+        return false;
     }
 
     /**
@@ -278,13 +278,11 @@ window.Calculator = function(aMatrixTable, bMatrixTable, cMatrixTable, radioInpu
                 throw new ReferenceError('row ' + (i + 1) + ' of matrix ' + matrix.name + ' is missing or incomplete');
             for (var j = 0; j < matrix.cols; j++) {
                 var n = cells.eq(j).prop('value');
-                if (n == '-') {
-                    cells.eq(j).prop('value', '');
-                    n = "0"
-                }
+                if (!n || n == '-') n = '0';
                 if (isNaN(n) || !isFinite(n))
                      throw new TypeError(matrix.name + (i + 1) + ',' + (j + 1) +
                          ' must contain a finite number, instead got: "' + n + '"');
+                cells.eq(j).prop('value', +n);
                 content[i].push(+n);
             }
         }

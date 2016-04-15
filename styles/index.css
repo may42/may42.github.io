@@ -47,7 +47,7 @@ body {
 }
 
 .action-menu {
-    margin-bottom: 64px;
+    margin-bottom: 65px;
 }
 .action-menu button[type="submit"] {
     margin-bottom: 55px;
@@ -56,7 +56,7 @@ body {
     margin-bottom: 10px;
 }
 .matrix-choice-menu {
-    margin-bottom: 16px;
+    margin-bottom: 15px;
 }
 .size-menu {
     margin-bottom: 44px;
@@ -72,14 +72,14 @@ body {
     display: block;
 }
 
-.undo-icon:before, .swap-icon:before, .add-icon:before, .minus-icon:before {
+.undo-icon::before, .swap-icon::before, .add-icon::before, .minus-icon::before {
     font-family: "Kontur-Iconic-eco", sans-serif;
     margin-right: 4px;
 }
 .undo-icon::before { content: '\E012'; }
 .swap-icon::before { content: '\E01F'; }
-.add-icon:before { content: '\E00D'; }
-.minus-icon:before { content: '\E01E'; }
+.add-icon::before { content: '\E00D'; }
+.minus-icon::before { content: '\E01E'; }
 
 button::-moz-focus-inner {
     padding: 0;
@@ -95,9 +95,14 @@ input, button {
             box-shadow: none;
     background-clip: padding-box;
 }
-input, button, input[type="radio"] + label, input[type="radio"] + label span.radio {
-    outline: none; !important;
+input, button, input[type="radio"] + label {
+    outline: none !important;
 }
+
+input::-webkit-input-placeholder { color: rgba(0, 0, 0, 0.17) !important; }
+input:-moz-placeholder      { color: rgba(0, 0, 0, 0.17) !important; }
+input::-moz-placeholder     { color: rgba(0, 0, 0, 0.17) !important; }
+input:-ms-input-placeholder { color: rgba(0, 0, 0, 0.17) !important; }
 
 input[type="text"] {
     color: #404040;
@@ -117,19 +122,23 @@ input[type="text"]:focus {
 }
 
 input[type="radio"] {
-    position: absolute;
-    margin: 5px 2px;
+    display: inline-block;
+    padding: 0;
+    margin: 0 8px 0 1px;
+    cursor: pointer;
 }
 input[type="radio"] + label {
     display: inline-block;
     position: relative;
     line-height: 100%;
-    margin: 0 17px 0 22px;
+    margin: 0 16px 0 0;
     white-space: nowrap;
 }
-input[type="radio"] + label span.radio {
+input[type="radio"] + label::before {
+    content: "";
+    display: inline-block;
     position: absolute;
-    top: 0;
+    top: -1px;
     left: -22px;
     cursor: pointer;
     width: 14px;
@@ -141,13 +150,14 @@ input[type="radio"] + label span.radio {
     background-color: #F2F2F2;
     background-clip: padding-box;
 }
-input[type="radio"]:checked + label span.radio:after {
+input[type="radio"]:checked + label::after {
     content: "";
+    display: inline-block;
     position: absolute;
     height: 8px;
     width: 8px;
     top: 3px;
-    left: 3px;
+    left: -18px;
     border-radius: 100%;
     background-color: #404040;
 }
@@ -161,7 +171,7 @@ button {
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-bottom-color: rgba(0, 0, 0, 0.3);
 }
-button, input[type="radio"] + label span.radio {
+button, input[type="radio"] + label::before {
     background-color: #F5F5F5;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFEFE',endColorstr='#ECECEC')";
     background: -webkit-linear-gradient(top, #FEFEFE, #ECECEC);
@@ -170,7 +180,7 @@ button, input[type="radio"] + label span.radio {
     background:         linear-gradient(to bottom, #FEFEFE, #ECECEC);
     background-clip: padding-box;
 }
-button:hover, input[type="radio"] + label span.radio:hover {
+button:hover, input[type="radio"] + label:hover::before {
     background-color: #E8E8E8;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F2F2F2',endColorstr='#DFDFDF')";
     background: -webkit-linear-gradient(top, #F2F2F2, #DFDFDF);
@@ -184,25 +194,24 @@ button.continueButton {
     position: relative;
     height: 40px;
     font-size: 16px;
-    padding: 2px 18px 6px;
+    padding: 2px 17px 5px 19px;
     border-radius: 3px 6px 6px 3px;
-    /*ошибка макета?*/
-    left: 1px;
+    overflow: visible; /*для IE*/
+    left: 1px; /*ошибка макета?*/
 }
-button.continueButton:after {
+button.continueButton::after {
     content: "";
     position: absolute;
     height: 20px;
     width: 20px;
     top: 9px;
     right: -10px;
-    border-radius: 2px;
-    border-top-right-radius: 3px;
+    border-radius: 2px 3px 2px 2px;
     border: 1px solid;
     border-color: inherit;
-    border-bottom: none;
-    border-left: none;
-    outline: none; !important;
+    border-bottom-style: none;
+    border-left-style: none;
+    outline: none !important;
     -webkit-transform: rotate(45deg) skew(15deg, 15deg);
        -moz-transform: rotate(45deg) skew(15deg, 15deg);
         -ms-transform: rotate(45deg) skew(15deg, 15deg);
@@ -215,7 +224,7 @@ button.continueButton:after {
     background:         linear-gradient(to bottom right, #FEFEFE, #ECECEC);
     background-clip: padding-box;
 }
-button.continueButton:hover:after {
+button.continueButton:hover::after {
     background-color: #E8E8E8;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F2F2F2',endColorstr='#DFDFDF')";
     background: -webkit-linear-gradient(top left, #F2F2F2, #DFDFDF);
@@ -249,7 +258,7 @@ button[type="submit"]:hover {
     background-clip: padding-box;
 }
 
-button.continueButton[type="submit"]:after {
+button.continueButton[type="submit"]::after {
     background-color: #419D14;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#4BA91D',endColorstr='#38920C')";
     background: -webkit-linear-gradient(top left, #4BA91D, #38920C);
@@ -258,7 +267,7 @@ button.continueButton[type="submit"]:after {
     background:         linear-gradient(to bottom right, #4BA91D, #38920C);
     background-clip: padding-box;
 }
-button.continueButton[type="submit"]:hover:after {
+button.continueButton[type="submit"]:hover::after {
     background-color: #36850F;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#3B8D13',endColorstr='#317E0B')";
     background: -webkit-linear-gradient(top left, #3B8D13, #317E0B);
@@ -269,14 +278,14 @@ button.continueButton[type="submit"]:hover:after {
 }
 
 button:focus, button[type="submit"]:focus, button.continueButton:focus,
-input[type="text"]:focus, input[type="radio"]:focus + label span.radio {
+input[type="text"]:focus, input[type="radio"]:focus + label::before {
     border-color: #5199db;
     -webkit-box-shadow: 0 0 0 1px #5199db, inset 0 0 0 1px #fff;
        -moz-box-shadow: 0 0 0 1px #5199db, inset 0 0 0 1px #fff;
             box-shadow: 0 0 0 1px #5199db, inset 0 0 0 1px #fff;
 }
 
-button:active, button.continueButton:active, input[type="radio"] + label span.radio:active {
+button:active, button.continueButton:active, input[type="radio"] + label:active::before {
     background-color: #D9D9D9;
     border-color: rgba(0, 0, 0, 0.2);
     border-top-color: rgba(0, 0, 0, 0.35);
@@ -292,14 +301,15 @@ button[type="submit"]:active {
        -moz-box-shadow: inset 0 2px 1px -1px rgba(0, 0, 0, 0.3);
             box-shadow: inset 0 2px 1px -1px rgba(0, 0, 0, 0.3);
 }
-button:active, button[type="submit"]:active, input[type="radio"] + label span.radio:active {
+button:active, button.continueButton:active, input[type="radio"] + label:active::before,
+button[type="submit"]:active {
     background-image: none; /*remove gradient*/
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
     background-clip: padding-box;
 }
 
 button[disabled], button.continueButton[type="submit"][disabled],
-input[type="text"][disabled], input[type="radio"][disabled] + label span.radio {
+input[type="text"][disabled], input[type="radio"][disabled] + label::before {
     background-image: none; /*remove gradient*/
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
     background-color: #F2F2F2;
